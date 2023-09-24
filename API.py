@@ -1,3 +1,4 @@
+import streamlit as st
 import requests
 
 BASE_URL = 'https://meowfacts.herokuapp.com/'
@@ -50,6 +51,8 @@ def get_collaboration_recommendations(data):
         }
         """
     except Exception as e:
-        return 'Please try again. An error has occurred' 
+        st.error('Please try again. An error has occurred')
+
+        return None
     
     return response
