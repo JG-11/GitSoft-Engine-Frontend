@@ -1,1 +1,1 @@
-# Streamlit frontend for GitSoft-Engine
+# Streamlit Frontend for Git-Soft Engine
