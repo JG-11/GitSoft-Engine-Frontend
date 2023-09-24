@@ -34,15 +34,10 @@ def get_collaboration_recommendations(data):
     """
 
     try:
-        requests.post(BASE_URL, data=query)
-    except Exception as e:
-        return 'Please try again. An error has occurred' 
-    
-    return None
+        response = requests.post(BASE_URL, data=query)
+        response = response.json()
 
-
-def parse_recommendations():
-    """
+        """
         {
             0: {
                 "repository_name": "",
@@ -53,7 +48,8 @@ def parse_recommendations():
                 "watchers_count": 500,
             }
         }
-    """
-    response = requests.get(BASE_URL)
-
-    return response.json()
+        """
+    except Exception as e:
+        return 'Please try again. An error has occurred' 
+    
+    return response
