@@ -27,14 +27,14 @@ def get_collaboration_recommendations(data):
 
     topics = parse_text_input(data.topics)
 
-    payload = {
-        'languages': languages,
-        'licenses': licenses,
-        'topics': topics,
-    }
+    query = f"""
+        - Programming languages: {languages}
+        - Licenses: {licenses}
+        - Content: {topics}
+    """
 
     try:
-        requests.post(BASE_URL, data=payload)
+        requests.post(BASE_URL, data=query)
     except Exception as e:
         return 'Please try again. An error has occurred' 
     
@@ -46,12 +46,10 @@ def parse_recommendations():
         {
             0: {
                 "repository_name": "",
-                "similarity_score": 10,
                 "watchers_count": 100,
             },
             1: {
                 "repository_name": "",
-                "similarity_score": 15,
                 "watchers_count": 500,
             }
         }
