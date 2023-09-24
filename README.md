@@ -1,1 +1,14 @@
-# Streamlit Frontend for Git-Soft Engine
+# Git-Soft Engine Web App
+
+[Streamlit](https://streamlit.io/) was implemented as the framework to turn our Python code into visual and interactive elements.
+
+As external (not built-in) components, we used the following ones:
+1. [streamlit-option-menu](https://github.com/victoryhb/streamlit-option-menu)
+2. [streamlit-card](https://pypi.org/project/streamlit-card/)
+
+The purpose of this project is allow you to get information about in what GitHub projects you are a strong developer to collaborate in, as well as a company where you may be a suitable candidate. We hope you enjoy it!
+
+The backend code can be accessed through this [repository](https://github.com/Ricardo-Jaramillo/GitSoft-Engine).
+
+
+> Access to the licenses documentation was performed through this [website](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository).
