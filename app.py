@@ -2,9 +2,9 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from PIL import Image
 
-# image = Image.open('media/logo.jpg')
+image = Image.open('media/app_logo.png')
 
-# st.image(image, caption='Git-Soft Engine')
+st.image(image, use_column_width=True)
 
 menu = option_menu(None, ["Jobs", "Collaborate"], 
     icons=['clipboard-fill', 'code-square'], menu_icon="cast", default_index=0,
