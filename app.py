@@ -3,8 +3,11 @@ from streamlit_option_menu import option_menu
 from streamlit_card import card
 from PIL import Image
 import API
-import json
 import random
+
+
+CARDS_COLORS = ["f94144", "f3722c", "f8961e", "f9844a", "f9c74f",
+                "90be6d", "43aa8b", "4d908e", "577590", "277da1"]
 
 
 image = Image.open('media/app_logo.png')
@@ -52,102 +55,44 @@ else:
         gpl_3 = col2.checkbox('GPL-3.0')
         bsd = col2.checkbox('BSD-3-clause')
 
-        licenses.append(mit)
-        licenses.append(apache)
-        licenses.append(gpl_2)
-        licenses.append(gpl_3)
-        licenses.append(bsd)
+        licenses.append("mit" if mit else None)
+        licenses.append("apache-2.0" if apache else None)
+        licenses.append("GPL-2.0" if gpl_2 else None)
+        licenses.append("GPL-3.0" if gpl_3 else None)
+        licenses.append("BSD-3-clause" if bsd else None)
 
 # Button
 send = st.button('Get recommendations', use_container_width=True)
 if send:
     data = {"languages": languages, "licenses": licenses, "topics": topics}
 
-    """
-    recommendations = API.get_collaboration_recommendations(data)
-    if isinstance(recommendations, str):
-        st.error(recommendations)
-    else:
-        colors_api = "https://singlecolorimage.com/get/33fd8f/400x100"
-        colors = ["#f94144", "#f3722c", "#f8961e", "#f9844a", "#f9c74f", "#90be6d", "#43aa8b", "#4d908e", "#577590", "#277da1"]
-
-        response = json.loads(recommendations)
-        for obj in response:
-            repo = response[obj]
-            st_card(
-                title = repo["repository_name"],
-                image = f"https://singlecolorimage.com/get/{random.choice(colors)}/125x125",
-                url = f"https://github.com/{repo['repository_name']}",
-            )
-    """
-
-    recommendations = json.dumps(
-        {
-            "0": [
-                {"repository_name": "krahets/hello-algo", "watchers_count": 100},
-            ],
-            "1": [
-                {"repository_name": "rasbt/python-machine-learning-book",
-                    "watchers_count": 500},
-            ],
-            "2": [
-                {"repository_name": "krahets/hello-algo", "watchers_count": 100},
-            ],
-            "3": [
-                {"repository_name": "rasbt/python-machine-learning-book",
-                    "watchers_count": 500},
-            ],
-            "4": [
-                {"repository_name": "krahets/hello-algo", "watchers_count": 100},
-            ],
-            "5": [
-                {"repository_name": "rasbt/python-machine-learning-book",
-                    "watchers_count": 500},
-            ],
-            "6": [
-                {"repository_name": "krahets/hello-algo", "watchers_count": 100},
-            ],
-            "7": [
-                {"repository_name": "rasbt/python-machine-learning-book",
-                    "watchers_count": 500},
-            ],
-            "8": [
-                {"repository_name": "krahets/hello-algo", "watchers_count": 100},
-            ],
-            "9": [
-                {"repository_name": "rasbt/python-machine-learning-book",
-                    "watchers_count": 500},
-            ],
-            "10": [
-                {"repository_name": "krahets/hello-algo", "watchers_count": 100},
-            ],
-        }
-    )
+    with st.spinner('Generating recommendations...'):
+        recommendations = API.get_collaboration_recommendations(data)
 
     if recommendations:
-        colors = ["f94144", "f3722c", "f8961e", "f9844a", "f9c74f",
-                  "90be6d", "43aa8b", "4d908e", "577590", "277da1"]
+        st.info(recommendations['output_string']['message']['content'], icon="ℹ️")
 
-        response = json.loads(recommendations)
+        total_repos = len(recommendations['watchers'])
+        if total_repos > 0:
+            st.subheader(f'_Grid of the :red[{total_repos} recommended] repositories_', divider='red')
+        
         col1, col2 = st.columns(2)
-        for i, obj in enumerate(response):
-            repo = response[obj][0]
-            
-            if i in range(0, 6):
+        for i in range(total_repos):
+            if i in range(0, total_repos // 2):
                 with col1:
                     card(
-                        title = repo["repository_name"],
-                        text = f"{repo['watchers_count']} watchers",
-                        image = f"https://singlecolorimage.com/get/{random.choice(colors)}/1x1",
-                        url = f"https://github.com/{repo['repository_name']}",
+                        title = recommendations["reponame"][i],
+                        text = f"{recommendations['watchers'][i]} watchers",
+                        image = f"https://singlecolorimage.com/get/{random.choice(CARDS_COLORS)}/1x1",
+                        url = f"https://github.com/search?q={recommendations['reponame'][i]}+in:name",
                         key=str(i),
                     )
             else:
                 with col2:
                     card(
-                        title = repo["repository_name"],
-                        text = f"{repo['watchers_count']} watchers",
-                        image = f"https://singlecolorimage.com/get/{random.choice(colors)}/1x1",
-                        url = f"https://github.com/{repo['repository_name']}",
+                        title = recommendations["reponame"][i],
+                        text = f"{recommendations['watchers'][i]} watchers",
+                        image = f"https://singlecolorimage.com/get/{random.choice(CARDS_COLORS)}/1x1",
+                        url = f"https://github.com/search?q={recommendations['reponame'][i]}+in:name",
                         key=str(i),
                     )
