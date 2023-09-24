@@ -4,7 +4,7 @@ from streamlit_card import card
 from PIL import Image
 import API
 import random
-
+import pandas as pd
 
 CARDS_COLORS = ["f94144", "f3722c", "f8961e", "f9844a", "f9c74f",
                 "90be6d", "43aa8b", "4d908e", "577590", "277da1"]
@@ -14,8 +14,8 @@ image = Image.open('media/app_logo.png')
 
 st.image(image, use_column_width=True)
 
-menu = option_menu(None, ["Collaborate", "Jobs"],
-                   icons=['code-square', 'clipboard-fill'], menu_icon="cast", default_index=0,
+menu = option_menu(None, ["Collaborate", "Jobs", "Example Data"],
+                   icons=['code-square', 'clipboard-fill', 'eye'], menu_icon="cast", default_index=0,
                    orientation="horizontal", key="menu")
 
 selection = st.session_state.menu
@@ -26,7 +26,9 @@ if selection and selection == "Jobs":
         bytes_data = uploaded_file.read()
         st.write("filename:", uploaded_file.name)
         st.write(bytes_data)
-else:
+    
+    send = st.button('Get recommendations', use_container_width=True)
+elif selection is None or selection == "Collaborate":
     # Title
     st.subheader(
         "What topic(s) are you interested in? (Machine Learning, Medicine, etc.)")
@@ -60,9 +62,15 @@ else:
         licenses.append("GPL-2.0" if gpl_2 else None)
         licenses.append("GPL-3.0" if gpl_3 else None)
         licenses.append("BSD-3-clause" if bsd else None)
+    
+    send = st.button('Get recommendations', use_container_width=True)
+else:
+    df = pd.read_csv('data/github_repos_dataset.csv')
 
-# Button
-send = st.button('Get recommendations', use_container_width=True)
+    st.dataframe(df, hide_index=True)
+
+    send = None
+
 if send:
     data = {"languages": languages, "licenses": licenses, "topics": topics}
 
